@@ -1,15 +1,5 @@
-function addProdutosAoCarrinho(carrinho, produto) {
-
-    for (let produtoAtual of carrinho.produtos) {
-        if (produtoAtual.id === produto.id) {
-            produtoAtual.qtd + produto.qtd;
-        } else {
-            carrinho.produtos.push(produto);
-
-            return;
-        }
-    }
-};
+// function addProdutosAoCarrinho(carrinho, produto) {
+// };
 
 const novaBermuda = {
     id: 2,
@@ -58,10 +48,21 @@ const carrinho = {
         }
         console.log(`Total de Itens: ${totalItens}`);
         console.log(`Total a Pagar: ${(total / 100).toLocaleString("en-US", { style: "currency", currency: "BRL" })}`);
+    },
+
+    addProduto: function (produto) {
+        for (let produtoAtual of this.produtos) {
+            if (produtoAtual.id === produto.id) {
+                produtoAtual.qtd + produto.qtd;
+            } else {
+                this.produtos.push(produto);
+                return;
+            }
+        }
     }
 };
 
-addProdutosAoCarrinho(carrinho, novaBermuda)
-addProdutosAoCarrinho(carrinho, novoTenis);
-addProdutosAoCarrinho(carrinho, novoTenis1);
+carrinho.addProduto(novaBermuda);
+carrinho.addProduto(novoTenis);
+carrinho.addProduto(novoTenis1);
 carrinho.imprimirResumo();
