@@ -63,7 +63,7 @@ const carrinho = {
         console.log(`Cliente: ${this.nomeDoCliente}`);
         const totalItens = this.calcularTotalDeItens();
         const totalAPagar = this.calculaTotalAPagar();
-
+        const desconto = this.calcularDesconto();
         let contador = 1;
         for (let produto of this.produtos) {
             const valorTotal = ((produto.qtd * produto.precoUnit) / 100).toFixed(2);
@@ -71,7 +71,7 @@ const carrinho = {
             contador++;
         }
         console.log(`Total de Itens ${totalItens} Itens`);
-        console.log(`Total a Pagar: ${(totalAPagar / 100).toLocaleString("en-US", { style: "currency", currency: "BRL" })}`);
+        console.log(`Total a Pagar: R$${(desconto / 100).toFixed(2)}`);
 
     },
 
@@ -90,7 +90,30 @@ const carrinho = {
         }
         return valorCompra;
     },
+
+    calcularDesconto: function () {
+        const precos = [];
+        let desconto = 0;
+        if (this.calcularTotalDeItens() > 4) {
+
+            for (let item of this.produtos) {
+                precos.push(item.precoUnit);
+            }
+        }
+        const minimo = Math.min(...precos);
+
+        if (this.calculaTotalAPagar() >= 100) {
+            desconto = ((this.calculaTotalAPagar() * 10) / 100);
+        }
+
+        if (desconto / 100 > minimo / 100) {
+            return (this.calculaTotalAPagar() - desconto);
+        } else {
+            return (this.calculaTotalAPagar() - minimo);
+        }
+    }
 };
+
 
 
 carrinho.addProduto(novaBermuda);
@@ -98,3 +121,4 @@ carrinho.addProduto(novoTenis);
 carrinho.addProduto(novoTenis1);
 carrinho.imprimirResumo();
 carrinho.imprimirDetalhe();
+carrinho.calcularDesconto();
