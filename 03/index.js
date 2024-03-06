@@ -1,6 +1,3 @@
-// function addProdutosAoCarrinho(carrinho, produto) {
-// };
-
 const novaBermuda = {
     id: 2,
     nome: "Bermuda",
@@ -14,9 +11,10 @@ const novoTenis = {
     qtd: 1,
     precoUnit: 10000
 };
+
 const novoTenis1 = {
     id: 4,
-    nome: "Tenis",
+    nome: "Tenis Teste",
     qtd: 1,
     precoUnit: 12000
 };
@@ -37,32 +35,66 @@ const carrinho = {
             precoUnit: 5000
         }
     ],
+
     imprimirResumo: function () {
         console.log(`Nome do Cliente: ${this.nomeDoCliente}`);
-        let total = 0;
-        let totalItens = 0;
-        for (let item of this.produtos) {
-            total += item.qtd * item.precoUnit
-            totalItens += item.qtd
+        const totalItens = this.calcularTotalDeItens();
+        const totalAPagar = this.calculaTotalAPagar();
 
-        }
+
         console.log(`Total de Itens: ${totalItens}`);
-        console.log(`Total a Pagar: ${(total / 100).toLocaleString("en-US", { style: "currency", currency: "BRL" })}`);
+        console.log(`Total a Pagar: ${(totalAPagar / 100).toLocaleString("en-US", { style: "currency", currency: "BRL" })}`);
     },
 
     addProduto: function (produto) {
+        let tamanhoArray = 0;
         for (let produtoAtual of this.produtos) {
+            tamanhoArray++;
             if (produtoAtual.id === produto.id) {
-                produtoAtual.qtd + produto.qtd;
-            } else {
+                produtoAtual.qtd += produto.qtd;
+            } else if (tamanhoArray == this.produtos.length) {
                 this.produtos.push(produto);
                 return;
             }
         }
-    }
+    },
+
+    imprimirDetalhe: function () {
+        console.log(`Cliente: ${this.nomeDoCliente}`);
+        const totalItens = this.calcularTotalDeItens();
+        const totalAPagar = this.calculaTotalAPagar();
+
+        let contador = 1;
+        for (let produto of this.produtos) {
+            const valorTotal = ((produto.qtd * produto.precoUnit) / 100).toFixed(2);
+            console.log(`Item ${contador} - ${produto.nome} - ${produto.qtd} und - R$ ${valorTotal}`)
+            contador++;
+        }
+        console.log(`Total de Itens ${totalItens} Itens`);
+        console.log(`Total a Pagar: ${(totalAPagar / 100).toLocaleString("en-US", { style: "currency", currency: "BRL" })}`);
+
+    },
+
+    calcularTotalDeItens: function () {
+        let qtdDeItens = 0;
+        for (let item of this.produtos) {
+            qtdDeItens += item.qtd;
+        }
+        return qtdDeItens;
+    },
+
+    calculaTotalAPagar: function () {
+        let valorCompra = 0;
+        for (let item of this.produtos) {
+            valorCompra += item.qtd * item.precoUnit
+        }
+        return valorCompra;
+    },
 };
+
 
 carrinho.addProduto(novaBermuda);
 carrinho.addProduto(novoTenis);
 carrinho.addProduto(novoTenis1);
 carrinho.imprimirResumo();
+carrinho.imprimirDetalhe();
